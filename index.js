@@ -1,84 +1,139 @@
-// TODO: Include packages needed for this application
-const fs = require("fs");
-const inquirer = require("inqurer");
-// TODO: Create an array of questions for user input
+// External packages
+const inquirer = require('inquirer');
+const fs = require('fs');
+const util = require('util');
+
+// Internal modules
+const api = require('./src/api.js');
+const generateMarkdown = require('./src/generateMarkdown.js');
+
+// Inquirer prompts for userResponses
 const questions = [
-  {
-    type: "input",
-    name: "title",
-    message: "What is the project title?",
-    validate: (titleInput) => {
-      if (titleInput) {
-        return true;
-      } else {
-        console.log("Please enter a valid title!");
-        return false;
-      }
+    {
+        type: 'input',
+        message: "What is your GitHub username? (without the @ symbol)",
+        name: 'username',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid GitHub username is required.");
+            }
+            return true;
+        }
     },
-  },
-  {
-    type: "input",
-    name: "description",
-    message: "Write a brief description of your project: ",
-  },
-  {
-    type: "input",
-    name: "installation",
-    message: "Describe the installation process if any: ",
-  },
-  {
-    type: "input",
-    name: "usage",
-    message: "What is this project usage for?",
-  },
-  {
-    type: "input",
-    name: "contributing",
-    message: "Who are the contributors of this projects?",
-  },
-  {
-    type: "input",
-    name: "tests",
-    message: "Is there a test included?",
-  },
-  {
-    type: "input",
-    name: "questions",
-    message: "What do I do if I have an issue? ",
-  },
-  {
-    type: "input",
-    name: "username",
-    message: "Please enter your GitHub username: ",
-    validate: (usernameInput) => {
-      if (usernameInput) {
-        return true;
-      } else {
-        console.log("Please enter your username!");
-        return false;
+    {
+      type: 'input',
+      message: "What is your email addres?",
+      name: 'email',
+      validate: function (answer) {
+          if (answer.length < 1 && !answer.includes('@')) {
+              return console.log("A valid email address is required.");
+          }
+          return true;
       }
-    },
   },
-  {
-    type: "input",
-    name: "email",
-    message: "Please enter your email address: ",
-    validate: (emailInput) => {
-      if (emailInput) {
-        return true;
-      } else {
-        console.log("Please enter your email address!");
-        return false;
-      }
+    {
+        type: 'input',
+        message: "What is the name of your GitHub repo?",
+        name: 'repo',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid GitHub repo is required for a badge.");
+            }
+            return true;
+        }
     },
+    {
+        type: 'input',
+        message: "What is the title of your project?",
+        name: 'title',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid project title is required.");
+            }
+            return true;
+        }
+    },
+    {
+        type: 'input',
+        message: "Write a description of your project.",
+        name: 'description',
+        validate: function (answer) {
+            if (answer.length < 1) {
+                return console.log("A valid project description is required.");
+            }
+            return true;
+        }
+    },
+    {
+        type: 'input',
+        message: "If applicable, describe the steps required to install your project for the Installation section.",
+        name: 'installation'
+    },
+    {
+        type: 'input',
+        message: "Provide instructions and examples of your project in use for the Usage section.",
+        name: 'usage'
+    },
+    {
+        type: 'input',
+        message: "If applicable, provide guidelines on how other developers can contribute to your project.",
+        name: 'contributing'
+    },
+    {
+      type: 'input',
+      message: "If you would like, leave instructions for the best way other developers can reach you.",
+      name: 'contact'
   },
+    {
+        type: 'input',
+        message: "If applicable, provide any tests written for your application and provide examples on how to run them.",
+        name: 'tests'
+    },
+    {
+        type: 'list',
+        message: "Choose a license for your project.",
+        choices: ['GNU AGPLv3', 'GNU GPLv3', 'GNU LGPLv3', 'Mozilla Public License 2.0', 'Apache License 2.0', 'MIT License', 'Boost Software License 1.0', 'The Unlicense'],
+        name: 'license'
+    }
 ];
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+function writeToFile(fileName, data) {
+    fs.writeFile(fileName, data, err => {
+        if (err) {
+          return console.log(err);
+        }
+      
+        console.log("Success! Your README.md file has been generated")
+    });
+}
 
-// TODO: Create a function to initialize app
-function init() {}
+const writeFileAsync = util.promisify(writeToFile);
 
-// Function call to initialize app
+
+// Main function
+async function init() {
+    try {
+
+        // Prompt Inquirer questions
+        const userResponses = await inquirer.prompt(questions);
+        console.log("Your responses: ", userResponses);
+        console.log("Thank you for your responses! Fetching your GitHub data next...");
+    
+        // Call GitHub api for user info
+        const userInfo = await api.getUser(userResponses);
+        console.log("Your GitHub user info: ", userInfo);
+    
+        // Pass Inquirer userResponses and GitHub userInfo to generateMarkdown
+        console.log("Generating your README next...")
+        const markdown = generateMarkdown(userResponses, userInfo);
+        console.log(markdown);
+    
+        // Write markdown to file
+        await writeFileAsync('README.md', markdown);
+
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 init();
