@@ -47,7 +47,7 @@ function generateMarkdown(userResponses, userInfo) {
   // Generate markdown for the top required portions of the README
   let draftMarkdown = 
   `# ${userResponses.title}
-  ![Badge for GitHub repo top language](https://img.shields.io/github/languages/top/${userResponses.username}/${userResponses.repo}?style=flat&logo=appveyor) ![Badge for GitHub last commit](https://img.shields.io/github/last-commit/${userResponses.username}/${userResponses.repo}?style=flat&logo=appveyor)
+  ![Badge for GitHub repo top language](https://img.shields.io/github/languages/top/${userResponses.username}/${userResponses.repo}?style=flat&logo=appveyor) ![Badge for GitHub last commit](https://img.shields.io/github/last-commit/${userResponses.username}/${userResponses.repo}?style=flat&logo=appveyor) ![License](https://img.shields.io/github/license/${userResponses.username}/${userResponses.repo}?style=flat&logo=appveyor)
   
   
   ## Description 
@@ -60,7 +60,7 @@ function generateMarkdown(userResponses, userInfo) {
  
   // Add License section since License is required to Table of Contents
   draftMarkdown += `
-   ![License](https://img.shields.io/github/license/${userResponses.username}/${userResponses.repo}?style=flat&logo=appveyor)`;
+   `
   
 
   // Optional Installation section
