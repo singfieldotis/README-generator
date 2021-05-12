@@ -3,32 +3,24 @@
   
   
   ## Description 
-
-  - screencastify link to project demo: https://drive.google.com/file/d/1T3CEdMC8S8PYr-MJ51FsHKfVv1StrLa7/view
   
-  Project uses a CLI to ask for user input, and takes that input, and turns it into a professional `README.md` file
+  This app will create a simple README doc for use in github repos
   ## Table of Contents
   * [Installation](#installation)
   * [Usage](#usage)
   * [License](#license)
   * [Contributing](#contributing)
   * [Questions](#questions)
-  * [Tests](#tests)
    
   
   ## Installation
   
-  To install this project you would just want to copy the files from the repo
+  created using node.js and inquirer from npm
   
   ## Usage 
   
   
-  You can use this app to create professional README.md files to be used with your GitHub repos
-  
-  ## Tests
-  
-  
-  There were no tests used for this app
+  run in command line and follow prompts!
   
   ## License
   
@@ -43,5 +35,5 @@
   E-mail: singfieldotis@gmail.com
   GitHub: [@singfieldotis](https://api.github.com/users/singfieldotis)
 
-  You can reach me at the email address provided
+  you can reach me using the email above
   
